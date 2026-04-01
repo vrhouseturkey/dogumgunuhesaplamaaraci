@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VR HOUSE Doğum Günü Etkinlik Hesaplayıcı</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.08), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,0.05), transparent 30%),
+        linear-gradient(135deg, #0a0f1f, #111b31 45%, #0f1423);
+      color: #fff;
+      min-height: 100vh;
+      padding: 28px 18px;
+    }
+
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    .hero-left {
+      padding: 30px;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: #9ddcff;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #00d2ff, #377dff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 24px rgba(0, 210, 255, 0.28);
+      font-size: 17px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 38px;
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: rgba(255,255,255,0.82);
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 900px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      padding: 26px;
+    }
+
+    .panel h2 {
+      margin: 0 0 18px;
+      font-size: 24px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.92);
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    select option {
+      color: #000;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: #3a7bff;
+    }
+
+    .checkbox-row span {
+      font-size: 15px;
+    }
+
+    .range-wrap {
+      padding: 16px 16px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .range-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .range-title {
+      font-size: 14px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .range-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #a9dcff;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .range-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .branch-cards {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .branch-card {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.25s ease;
+    }
+
+    .branch-card.active {
+      border-color: rgba(83,170,255,0.95);
+      box-shadow: 0 0 0 1px rgba(83,170,255,0.35), 0 12px 28px rgba(0,0,0,0.16);
+      background: linear-gradient(180deg, rgba(58,123,255,0.15), rgba(255,255,255,0.04));
+    }
+
+    .branch-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .branch-card p {
+      margin: 0;
+      color: rgba(255,255,255,0.76);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .highlight-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #a9dcff;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .warning {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 184, 77, 0.12);
+      border: 1px solid rgba(255, 184, 77, 0.28);
+      color: #ffd999;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .result-box {
+      background: linear-gradient(145deg, rgba(58,123,255,0.18), rgba(0,210,255,0.08));
+      border: 1px solid rgba(120,190,255,0.25);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .top-price {
+      margin-bottom: 16px;
+    }
+
+    .top-price .small {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .price {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .price-note {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .summary-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .summary-item {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .summary-item .k {
+      display: block;
+      font-size: 12px;
+      color: rgba(255,255,255,0.58);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    .summary-item .v {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .detail-box {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 14px;
+    }
+
+    .cost-breakdown {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cost-breakdown h3 {
+      margin: 0 0 14px;
+      font-size: 17px;
+    }
+
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+    }
+
+    .cost-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .cost-row span:last-child {
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: rgba(255,255,255,0.56);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 980px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 31px;
+      }
+
+      .summary-list {
+        grid-template-columns: 1fr;
+      }
+
+      .price {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <div class="card hero-left">
+        <div class="logo-row">
+          <div class="logo-badge">VR</div>
+          <div>VR HOUSE • DOĞUM GÜNÜ ETKİNLİK HESAPLAYICI</div>
+        </div>
+        <h1>Şube, süre ve kutlama tipine göre<br>otomatik fiyat hesaplama</h1>
+        <p class="subtitle">
+          Doğum günü organizasyonunuzu şube, ödeme tipi ve toplam etkinlik süresine göre kolayca planlayabilirsiniz.
+          Pastalı etkinliklerde sistem son 30 dakikayı otomatik olarak kutlama bölümü olarak ayırır.
+        </p>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="card panel">
+        <h2>Etkinlik Seçenekleri</h2>
+
+        <div class="field">
+          <label for="branch">Şube Seçimi</label>
+          <select id="branch">
+            <option value="taksim">Taksim</option>
+            <option value="besiktas">Beşiktaş</option>
+            <option value="bakirkoy">Bakırköy</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="guests">Katılımcı Sayısı</label>
+          <input type="number" id="guests" min="1" max="50" value="8" />
+        </div>
+
+        <div class="field">
+          <label for="payment">Ödeme Tipi</label>
+          <select id="payment">
+            <option value="standard">Standart Ödeme (720 TL)</option>
+            <option value="cash">Nakit Ödeme (600 TL)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Kutlama Tercihi</label>
+          <div class="checkbox-row">
+            <input type="checkbox" id="cake" />
+            <span>Pasta kutlaması istiyoruz</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Toplam Etkinlik Süresi</label>
+          <div class="range-wrap">
+            <div class="range-head">
+              <div class="range-title">Kaydırmalı zaman barı</div>
+              <div class="range-value" id="durationLabel">2 Saat</div>
+            </div>
+            <input type="range" id="durationRange" min="0" max="3" step="1" value="0" />
+            <div class="range-steps" id="rangeSteps">
+              <span>2 Saat</span>
+              <span>2,5 Saat</span>
+              <span>3 Saat</span>
+              <span>3,5 Saat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Şube Özellikleri</label>
+          <div class="branch-cards">
+            <div class="branch-card" id="card-taksim">
+              <h3>Taksim</h3>
+              <p>
+                <p>
+  Karaoke, VR oyunları ve araç simülatörü ile daha zengin bir doğum günü deneyimi sunar.
+  Ayrıca doğum günü karşılama ekranı, süsleme, catering imkanı ve sıcak içecek ikramları ile
+  kutlamayı daha özel ve kapsamlı hale getirir.
+</p>
+<div class="highlight-note">Öne çıkan avantaj: Daha kapsamlı ve premium kutlama deneyimi</div>
+              </p>
+              
+            </div>
+
+            <div class="branch-card" id="card-besiktas">
+              <h3>Beşiktaş</h3>
+              <p>
+                VR ve araç simülatörü kombinasyonu ile dengeli bir doğum günü kurgusu sunar.
+                Pasta kutlaması yalnızca 8-9 kişilik daha butik organizasyonlarda planlanabilir.
+              </p>
+              <div class="highlight-note">Öne çıkan avantaj: Butik gruplar için düzenli ve dengeli akış</div>
+            </div>
+
+            <div class="branch-card" id="card-bakirkoy">
+              <h3>Bakırköy</h3>
+              <p>
+                Daha kompakt yapısıyla kısa ve verimli organizasyonlar için uygundur.
+                Pasta kutlaması yalnızca 8-9 kişilik gruplarda planlanabilir.
+              </p>
+              <div class="highlight-note">Öne çıkan avantaj: Kısa süreli organizasyonlarda ekonomik seçenek</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="warning" id="warningBox"></div>
+      </div>
+
+      <div class="card panel">
+        <h2>Etkinlik Özeti ve Toplam Tutar</h2>
+
+        <div class="result-box">
+          <div class="top-price">
+            <div class="small">Toplam Tutar</div>
+            <div class="price" id="totalPrice">9.600 TL</div>
+            <div class="price-note" id="priceNote">
+              Seçtiğiniz organizasyon detaylarına göre toplam tutar otomatik olarak güncellenir.
+            </div>
+          </div>
+
+          <div class="summary-list">
+            <div class="summary-item">
+              <span class="k">Seçilen Şube</span>
+              <span class="v" id="summaryBranch">Taksim</span>
+            </div>
+            <div class="summary-item">
+              <span class="k">Katılımcı</span>
+              <span class="v" id="summaryGuests">8 kişi</span>
+            </div>
+            <div class="summary-item">
+              <span class="k">Ödeme Tipi</span>
+              <span class="v" id="summaryPayment">Standart</span>
+            </div>
+            <div class="summary-item">
+              <span class="k">Kutlama Tipi</span>
+              <span class="v" id="summaryCake">Pastasız</span>
+            </div>
+            <div class="summary-item">
+              <span class="k">Toplam Etkinlik Süresi</span>
+              <span class="v" id="summaryTotalDuration">2 Saat</span>
+            </div>
+            <div class="summary-item">
+              <span class="k">Pasta Kesim Tutarı</span>
+              <span class="v" id="summaryCakePrice">0 TL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-box" id="eventDetails"></div>
+
+        <div class="cost-breakdown">
+          <h3>Fiyat Özeti</h3>
+          <div class="cost-row">
+            <span>Pasta Kesim Tutarı</span>
+            <span id="cakePriceText">0 TL</span>
+          </div>
+          <div class="cost-row">
+            <span>Genel Toplam</span>
+            <span id="grandTotalText">9.600 TL</span>
+          </div>
+        </div>
+
+        <div class="footer-note">
+          Not: Pastalı etkinliklerde toplam sürenin son 30 dakikası kutlama bölümü olarak planlanır. Beşiktaş ve Bakırköy’de pasta kutlaması yalnızca 8-9 kişilik organizasyonlarda kabul edilmektedir.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const branchSelect = document.getElementById("branch");
+    const guestsInput = document.getElementById("guests");
+    const paymentSelect = document.getElementById("payment");
+    const cakeInput = document.getElementById("cake");
+    const durationRange = document.getElementById("durationRange");
+    const durationLabel = document.getElementById("durationLabel");
+    const rangeSteps = document.getElementById("rangeSteps");
+    const warningBox = document.getElementById("warningBox");
+
+    const totalPrice = document.getElementById("totalPrice");
+    const priceNote = document.getElementById("priceNote");
+
+    const summaryBranch = document.getElementById("summaryBranch");
+    const summaryGuests = document.getElementById("summaryGuests");
+    const summaryPayment = document.getElementById("summaryPayment");
+    const summaryCake = document.getElementById("summaryCake");
+    const summaryTotalDuration = document.getElementById("summaryTotalDuration");
+    const summaryCakePrice = document.getElementById("summaryCakePrice");
+
+    const eventDetails = document.getElementById("eventDetails");
+    const cakePriceText = document.getElementById("cakePriceText");
+    const grandTotalText = document.getElementById("grandTotalText");
+
+    const cardTaksim = document.getElementById("card-taksim");
+    const cardBesiktas = document.getElementById("card-besiktas");
+    const cardBakirkoy = document.getElementById("card-bakirkoy");
+
+    const DURATION_OPTIONS = [1, 1.5, 2, 2.5, 3, 3.5];
+
+    function formatPrice(num) {
+      return num.toLocaleString("tr-TR") + " TL";
+    }
+
+    function formatHourText(value) {
+      if (Number.isInteger(value)) return value + " Saat";
+      return value.toFixed(1).replace(".", ",") + " Saat";
+    }
+
+    function getBranchLabel(value) {
+      if (value === "taksim") return "Taksim";
+      if (value === "besiktas") return "Beşiktaş";
+      if (value === "bakirkoy") return "Bakırköy";
+      return "";
+    }
+
+    function getUnitPrice(payment) {
+      return payment === "cash" ? 600 : 720;
+    }
+
+    function getPaymentLabel(payment) {
+      return payment === "cash" ? "Nakit" : "Standart";
+    }
+
+    function getMinTotalDuration(branch, cake) {
+      if (branch === "taksim") return cake ? 2.5 : 2;
+      if (branch === "besiktas") return cake ? 2.5 : 2;
+      if (branch === "bakirkoy") return cake ? 2 : 1;
+      return 2;
+    }
+
+    function getAllowedDurations(branch, cake) {
+      const min = getMinTotalDuration(branch, cake);
+      return DURATION_OPTIONS.filter(d => d >= min);
+    }
+
+    function updateDurationSlider(branch, cake) {
+      const allowed = getAllowedDurations(branch, cake);
+      durationRange.min = 0;
+      durationRange.max = allowed.length - 1;
+
+      const currentIndex = parseInt(durationRange.value, 10) || 0;
+      if (currentIndex > allowed.length - 1) {
+        durationRange.value = 0;
+      }
+
+      const labels = allowed.map(v => `<span>${formatHourText(v)}</span>`).join("");
+      rangeSteps.innerHTML = labels;
+    }
+
+    function getSelectedTotalDuration(branch, cake) {
+      const allowed = getAllowedDurations(branch, cake);
+      const idx = parseInt(durationRange.value, 10) || 0;
+      return allowed[idx] || allowed[0];
+    }
+
+    function getCakeBase(branch, guests) {
+      if (branch === "taksim") {
+        return Math.max(8, guests);
+      }
+      if (branch === "besiktas") {
+        return 9;
+      }
+      if (branch === "bakirkoy") {
+        return 9;
+      }
+      return 0;
+    }
+
+    function resetCards() {
+      cardTaksim.classList.remove("active");
+      cardBesiktas.classList.remove("active");
+      cardBakirkoy.classList.remove("active");
+    }
+
+    function updatePlanner() {
+      const branch = branchSelect.value;
+      const payment = paymentSelect.value;
+      const unitPrice = getUnitPrice(payment);
+
+      let guests = parseInt(guestsInput.value, 10) || 0;
+      if (guests < 1) {
+        guests = 1;
+        guestsInput.value = 1;
+      }
+
+      warningBox.style.display = "none";
+      warningBox.innerHTML = "";
+
+      if ((branch === "besiktas" || branch === "bakirkoy") && cakeInput.checked) {
+        if (guests < 8) {
+          cakeInput.checked = false;
+          warningBox.style.display = "block";
+          warningBox.innerHTML = `${getBranchLabel(branch)} şubesinde pasta kutlaması minimum 8 kişi ile kabul edilmektedir. Pasta seçimi otomatik olarak kaldırıldı.`;
+        } else if (guests > 9) {
+          cakeInput.checked = false;
+          warningBox.style.display = "block";
+          warningBox.innerHTML = `${getBranchLabel(branch)} şubesinde pasta kutlaması maksimum 9 kişi ile yapılabilmektedir. Pasta seçimi otomatik olarak kaldırıldı.`;
+        }
+      }
+
+      const finalCake = cakeInput.checked;
+
+      updateDurationSlider(branch, finalCake);
+      const totalDuration = getSelectedTotalDuration(branch, finalCake);
+      const gameDuration = finalCake ? totalDuration - 0.5 : totalDuration;
+
+      const gamePrice = guests * gameDuration * unitPrice;
+      const cakeBase = finalCake ? getCakeBase(branch, guests) : 0;
+      const cakePrice = finalCake ? (cakeBase * 0.5 * unitPrice) : 0;
+      const total = gamePrice + cakePrice;
+
+      let details = "";
+
+      if (branch === "taksim") {
+        if (finalCake) {
+          details = `
+            <strong>Taksim / Pasta Kutlamalı Organizasyon</strong><br><br>
+            Taksim şubesi daha zengin içerikli kutlamalar için öne çıkan seçenektir.
+            Seçtiğiniz toplam sürenin son <strong>30 dakikası pasta kutlaması</strong> olarak ayrılır, kalan süre oyun deneyimi için kullanılır.
+          `;
+        } else {
+          details = `
+            <strong>Taksim / Pastasız Organizasyon</strong><br><br>
+            Taksim şubesi karaoke, VR oyunları ve araç simülatörü ile daha kapsamlı bir doğum günü deneyimi sunar.
+            Özellikle daha zengin akış isteyen organizasyonlar için güçlü bir seçenektir.
+          `;
+        }
+      }
+
+      if (branch === "besiktas") {
+        if (finalCake) {
+          details = `
+            <strong>Beşiktaş / Pasta Kutlamalı Organizasyon</strong><br><br>
+            Beşiktaş şubesinde pasta kutlaması yalnızca <strong>8-9 kişilik</strong> butik organizasyonlarda planlanır.
+            Seçtiğiniz toplam sürenin son <strong>30 dakikası pasta kutlaması</strong> olarak ayrılır.
+          `;
+        } else {
+          details = `
+            <strong>Beşiktaş / Pastasız Organizasyon</strong><br><br>
+            Beşiktaş şubesi VR ve araç simülatörü dengesiyle düzenli ve kontrollü bir etkinlik akışı sunar.
+            Özellikle orta ölçekli gruplar için iyi bir alternatiftir.
+          `;
+        }
+      }
+
+      if (branch === "bakirkoy") {
+        if (finalCake) {
+          details = `
+            <strong>Bakırköy / Pasta Kutlamalı Organizasyon</strong><br><br>
+            Bakırköy şubesinde pasta kutlaması yalnızca <strong>8-9 kişilik</strong> organizasyonlarda planlanır.
+            Seçtiğiniz toplam sürenin son <strong>30 dakikası pasta kutlaması</strong> olarak ayrılır.
+          `;
+        } else {
+          details = `
+            <strong>Bakırköy / Pastasız Organizasyon</strong><br><br>
+            Bakırköy şubesi daha kısa ve verimli organizasyonlar için uygundur.
+            Özellikle kompakt ve ekonomik doğum günü planlarında avantajlı bir seçenektir.
+          `;
+        }
+      }
+
+      durationLabel.textContent = formatHourText(totalDuration);
+
+      summaryBranch.textContent = getBranchLabel(branch);
+      summaryGuests.textContent = guests + " kişi";
+      summaryPayment.textContent = getPaymentLabel(payment);
+      summaryCake.textContent = finalCake ? "Pastalı" : "Pastasız";
+      summaryTotalDuration.textContent = formatHourText(totalDuration);
+      summaryCakePrice.textContent = formatPrice(cakePrice);
+
+      totalPrice.textContent = formatPrice(total);
+      cakePriceText.textContent = formatPrice(cakePrice);
+      grandTotalText.textContent = formatPrice(total);
+
+      priceNote.textContent = "Seçtiğiniz organizasyon detaylarına göre toplam tutar otomatik olarak güncellenir.";
+      eventDetails.innerHTML = details;
+
+      resetCards();
+      if (branch === "taksim") cardTaksim.classList.add("active");
+      if (branch === "besiktas") cardBesiktas.classList.add("active");
+      if (branch === "bakirkoy") cardBakirkoy.classList.add("active");
+    }
+
+    branchSelect.addEventListener("change", updatePlanner);
+    guestsInput.addEventListener("input", updatePlanner);
+    paymentSelect.addEventListener("change", updatePlanner);
+    cakeInput.addEventListener("change", updatePlanner);
+    durationRange.addEventListener("input", updatePlanner);
+
+    updatePlanner();
+  </script>
+</body>
+</html>
