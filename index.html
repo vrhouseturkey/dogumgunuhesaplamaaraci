@@ -33,7 +33,7 @@
 
     .card {
       background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.10);
       border-radius: 24px;
       backdrop-filter: blur(12px);
       box-shadow: 0 18px 40px rgba(0,0,0,0.28);
@@ -76,7 +76,7 @@
       color: rgba(255,255,255,0.82);
       font-size: 16px;
       line-height: 1.75;
-      max-width: 900px;
+      max-width: 920px;
     }
 
     .main-grid {
@@ -129,7 +129,7 @@
       padding: 14px 16px;
       border-radius: 14px;
       background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.10);
     }
 
     .checkbox-row input {
@@ -229,8 +229,8 @@
       margin-top: 16px;
       padding: 14px 16px;
       border-radius: 14px;
-      background: rgba(255, 184, 77, 0.12);
-      border: 1px solid rgba(255, 184, 77, 0.28);
+      background: rgba(255,184,77,0.12);
+      border: 1px solid rgba(255,184,77,0.28);
       color: #ffd999;
       line-height: 1.65;
       font-size: 14px;
@@ -397,7 +397,7 @@
 
         <div class="field">
           <label for="guests">Katılımcı Sayısı</label>
-          <input type="number" id="guests" min="1" max="50" value="8" />
+          <input type="number" id="guests" min="1" max="20" value="8" />
         </div>
 
         <div class="field">
@@ -439,21 +439,18 @@
             <div class="branch-card" id="card-taksim">
               <h3>Taksim</h3>
               <p>
-                <p>
-  Karaoke, VR oyunları ve araç simülatörü ile daha zengin bir doğum günü deneyimi sunar.
-  Ayrıca doğum günü karşılama ekranı, süsleme, catering imkanı ve sıcak içecek ikramları ile
-  kutlamayı daha özel ve kapsamlı hale getirir.
-</p>
-<div class="highlight-note">Öne çıkan avantaj: Daha kapsamlı ve premium kutlama deneyimi</div>
+                Karaoke, VR oyunları ve araç simülatörü ile daha zengin bir doğum günü deneyimi sunar.
+                Ayrıca doğum günü karşılama ekranı, süsleme, catering imkanı ve sıcak içecek ikramları ile
+                kutlamayı daha özel ve kapsamlı hale getirir.
               </p>
-              
+              <div class="highlight-note">Öne çıkan avantaj: Daha kapsamlı ve premium kutlama deneyimi</div>
             </div>
 
             <div class="branch-card" id="card-besiktas">
               <h3>Beşiktaş</h3>
               <p>
-                VR ve araç simülatörü kombinasyonu ile dengeli bir doğum günü kurgusu sunar.
-                Pasta kutlaması yalnızca 8-9 kişilik daha butik organizasyonlarda planlanabilir.
+                VR ve araç simülatörü dengesiyle düzenli ve kontrollü bir etkinlik akışı sunar.
+                Özellikle orta ölçekli gruplar ve butik kutlamalar için güçlü bir alternatiftir.
               </p>
               <div class="highlight-note">Öne çıkan avantaj: Butik gruplar için düzenli ve dengeli akış</div>
             </div>
@@ -462,7 +459,7 @@
               <h3>Bakırköy</h3>
               <p>
                 Daha kompakt yapısıyla kısa ve verimli organizasyonlar için uygundur.
-                Pasta kutlaması yalnızca 8-9 kişilik gruplarda planlanabilir.
+                Özellikle ekonomik ve pratik doğum günü planlarında avantajlı bir seçenektir.
               </p>
               <div class="highlight-note">Öne çıkan avantaj: Kısa süreli organizasyonlarda ekonomik seçenek</div>
             </div>
@@ -527,7 +524,8 @@
         </div>
 
         <div class="footer-note">
-          Not: Pastalı etkinliklerde toplam sürenin son 30 dakikası kutlama bölümü olarak planlanır. Beşiktaş ve Bakırköy’de pasta kutlaması yalnızca 8-9 kişilik organizasyonlarda kabul edilmektedir.
+          Not: Pastalı etkinliklerde toplam sürenin son 30 dakikası kutlama bölümü olarak planlanır.
+          Beşiktaş ve Bakırköy’de pasta kutlaması yalnızca 8-9 kişilik organizasyonlarda kabul edilmektedir.
         </div>
       </div>
     </section>
@@ -587,20 +585,32 @@
       return payment === "cash" ? "Nakit" : "Standart";
     }
 
-    function getMinTotalDuration(branch, cake) {
+    function getMaxGuests(branch, cake) {
+      if (branch === "taksim") return 20;
+      if (branch === "besiktas") return cake ? 9 : 18;
+      if (branch === "bakirkoy") return cake ? 9 : 18;
+      return 18;
+    }
+
+    function getMinTotalDuration(branch, cake, guests) {
       if (branch === "taksim") return cake ? 2.5 : 2;
       if (branch === "besiktas") return cake ? 2.5 : 2;
-      if (branch === "bakirkoy") return cake ? 2 : 1;
+
+      if (branch === "bakirkoy") {
+        if (cake) return 2;
+        return guests > 9 ? 2 : 1;
+      }
+
       return 2;
     }
 
-    function getAllowedDurations(branch, cake) {
-      const min = getMinTotalDuration(branch, cake);
+    function getAllowedDurations(branch, cake, guests) {
+      const min = getMinTotalDuration(branch, cake, guests);
       return DURATION_OPTIONS.filter(d => d >= min);
     }
 
-    function updateDurationSlider(branch, cake) {
-      const allowed = getAllowedDurations(branch, cake);
+    function updateDurationSlider(branch, cake, guests) {
+      const allowed = getAllowedDurations(branch, cake, guests);
       durationRange.min = 0;
       durationRange.max = allowed.length - 1;
 
@@ -613,8 +623,8 @@
       rangeSteps.innerHTML = labels;
     }
 
-    function getSelectedTotalDuration(branch, cake) {
-      const allowed = getAllowedDurations(branch, cake);
+    function getSelectedTotalDuration(branch, cake, guests) {
+      const allowed = getAllowedDurations(branch, cake, guests);
       const idx = parseInt(durationRange.value, 10) || 0;
       return allowed[idx] || allowed[0];
     }
@@ -632,6 +642,13 @@
       return 0;
     }
 
+    function getGameChargedGuests(branch, guests, cake) {
+      if (branch === "bakirkoy" && !cake) {
+        return Math.min(guests, 9);
+      }
+      return guests;
+    }
+
     function resetCards() {
       cardTaksim.classList.remove("active");
       cardBesiktas.classList.remove("active");
@@ -646,39 +663,54 @@
       let guests = parseInt(guestsInput.value, 10) || 0;
       if (guests < 1) {
         guests = 1;
-        guestsInput.value = 1;
       }
 
       warningBox.style.display = "none";
       warningBox.innerHTML = "";
 
-      if ((branch === "besiktas" || branch === "bakirkoy") && cakeInput.checked) {
+      let requestedCake = cakeInput.checked;
+
+      if ((branch === "besiktas" || branch === "bakirkoy") && requestedCake) {
         if (guests < 8) {
+          requestedCake = false;
           cakeInput.checked = false;
           warningBox.style.display = "block";
           warningBox.innerHTML = `${getBranchLabel(branch)} şubesinde pasta kutlaması minimum 8 kişi ile kabul edilmektedir. Pasta seçimi otomatik olarak kaldırıldı.`;
         } else if (guests > 9) {
+          requestedCake = false;
           cakeInput.checked = false;
           warningBox.style.display = "block";
           warningBox.innerHTML = `${getBranchLabel(branch)} şubesinde pasta kutlaması maksimum 9 kişi ile yapılabilmektedir. Pasta seçimi otomatik olarak kaldırıldı.`;
         }
       }
 
-      const finalCake = cakeInput.checked;
+      let maxGuests = getMaxGuests(branch, requestedCake);
+      if (guests > maxGuests) {
+        guests = maxGuests;
+        warningBox.style.display = "block";
+        warningBox.innerHTML = `${getBranchLabel(branch)} şubesi için bu seçimde maksimum katılımcı sayısı ${maxGuests} kişidir. Katılımcı sayısı otomatik olarak güncellendi.`;
+      }
 
-      updateDurationSlider(branch, finalCake);
-      const totalDuration = getSelectedTotalDuration(branch, finalCake);
-      const gameDuration = finalCake ? totalDuration - 0.5 : totalDuration;
+      guestsInput.max = maxGuests;
+      guestsInput.value = guests;
 
-      const gamePrice = guests * gameDuration * unitPrice;
-      const cakeBase = finalCake ? getCakeBase(branch, guests) : 0;
-      const cakePrice = finalCake ? (cakeBase * 0.5 * unitPrice) : 0;
+      updateDurationSlider(branch, requestedCake, guests);
+
+      const totalDuration = getSelectedTotalDuration(branch, requestedCake, guests);
+      const gameDuration = requestedCake ? totalDuration - 0.5 : totalDuration;
+
+      const gameChargedGuests = getGameChargedGuests(branch, guests, requestedCake);
+      const gamePrice = gameChargedGuests * gameDuration * unitPrice;
+
+      const cakeBase = requestedCake ? getCakeBase(branch, guests) : 0;
+      const cakePrice = requestedCake ? (cakeBase * 0.5 * unitPrice) : 0;
+
       const total = gamePrice + cakePrice;
 
       let details = "";
 
       if (branch === "taksim") {
-        if (finalCake) {
+        if (requestedCake) {
           details = `
             <strong>Taksim / Pasta Kutlamalı Organizasyon</strong><br><br>
             Taksim şubesi daha zengin içerikli kutlamalar için öne çıkan seçenektir.
@@ -694,7 +726,7 @@
       }
 
       if (branch === "besiktas") {
-        if (finalCake) {
+        if (requestedCake) {
           details = `
             <strong>Beşiktaş / Pasta Kutlamalı Organizasyon</strong><br><br>
             Beşiktaş şubesinde pasta kutlaması yalnızca <strong>8-9 kişilik</strong> butik organizasyonlarda planlanır.
@@ -710,7 +742,7 @@
       }
 
       if (branch === "bakirkoy") {
-        if (finalCake) {
+        if (requestedCake) {
           details = `
             <strong>Bakırköy / Pasta Kutlamalı Organizasyon</strong><br><br>
             Bakırköy şubesinde pasta kutlaması yalnızca <strong>8-9 kişilik</strong> organizasyonlarda planlanır.
@@ -730,7 +762,7 @@
       summaryBranch.textContent = getBranchLabel(branch);
       summaryGuests.textContent = guests + " kişi";
       summaryPayment.textContent = getPaymentLabel(payment);
-      summaryCake.textContent = finalCake ? "Pastalı" : "Pastasız";
+      summaryCake.textContent = requestedCake ? "Pastalı" : "Pastasız";
       summaryTotalDuration.textContent = formatHourText(totalDuration);
       summaryCakePrice.textContent = formatPrice(cakePrice);
 
